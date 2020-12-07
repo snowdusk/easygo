@@ -4,7 +4,6 @@ package netpoll
 
 import (
 	"os"
-	"fmt"
 )
 
 // New creates new epoll-based Poller instance with given config.
@@ -18,8 +17,17 @@ func New(c *Config) (Poller, error) {
 		return nil, err
 	}
 
-	fmt.Printf("%T\n", epoll)
-	return poller{epoll}, nil
+	return MyPoller{
+		poller: poller{
+			Epoll: epoll,
+		},
+		Epoll: epoll,
+	}, nil
+}
+
+type MyPoller struct {
+	poller
+	*Epoll
 }
 
 // poller implements Poller interface.
